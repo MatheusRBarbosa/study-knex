@@ -23,16 +23,39 @@ const main = async () => {
 
   if (param === "user") {
     console.log(">> Insert User");
+    const user = await db("users")
+      .insert({
+        name: "user 3",
+      })
+      .returning("*");
+
+    console.log(user);
     return;
   }
 
   if (param === "profile") {
     console.log(">> Insert Profile");
+    const profile = await db("profiles")
+      .insert({
+        name: "profile 1",
+        user_id: 1,
+      })
+      .returning("*");
+
+    console.log(profile);
+
     return;
   }
 
   if (param === "get-user") {
     console.log(">> Get User");
+    const user = db("users")
+      .where({ id: 1 })
+      .innerJoin("profiles", "users.id", "=", "profiles.user_id")
+      .options({})
+      .first();
+
+    console.log(user);
     return;
   }
 
