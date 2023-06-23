@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc",
+    "start": "npm run build && node build/index.js",
     "compose:up": "docker compose -p study-knex up -d",
     "knex:migrate:make": "knex --knexfile src/db/knexfile.ts migrate:make",
     "knex:migrate:up": "knex --knexfile src/db/knexfile.ts migrate:latest",
