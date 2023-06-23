@@ -47,7 +47,22 @@ const main = async () => {
     return;
   }
 
+  if (param === "sub") {
+    console.log(">> Insert Sub");
+    const sub = await db("sub_objects")
+      .insert({
+        name: "sub 2",
+        object_id: 2,
+      })
+      .returning("*");
+
+    console.log(sub);
+
+    return;
+  }
+
   if (param === "get-user") {
+    //TODO: Return profile relationship
     console.log(">> Get User");
     const user = db("users")
       .where({ id: 1 })
@@ -56,11 +71,6 @@ const main = async () => {
       .first();
 
     console.log(user);
-    return;
-  }
-
-  if (param === "update-user") {
-    console.log(">> Update User | Attach profile");
     return;
   }
 

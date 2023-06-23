@@ -24,6 +24,14 @@ declare module "knex/types/tables" {
     users: User[];
   }
 
+  interface SubObject {
+    id: number;
+    name: string;
+    object_id: number;
+
+    objects: Object[];
+  }
+
   interface UserObject {
     id: number;
     user_id: number;
@@ -38,5 +46,6 @@ declare module "knex/types/tables" {
     profiles: Profile;
     objects: Object;
     user_objects: UserObject;
+    sub_objects: SubObject;
   }
 }
