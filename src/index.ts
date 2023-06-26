@@ -62,21 +62,39 @@ const main = async () => {
   }
 
   if (param === "get-user") {
-    //TODO: Return profile relationship
     console.log(">> Get User");
-    const user = db("users")
-      .where({ id: 1 })
-      .innerJoin("profiles", "users.id", "=", "profiles.user_id")
-      .options({})
+    const user = await db("users")
+      .leftJoin("profiles", "users.id", "=", "profiles.user_id")
+      .where("users.id", 1)
+      .select([
+        "users.*",
+        db.raw("(json_agg(profiles.*) ->> 0)::json as profile"),
+      ])
+      .groupBy(["users.id", "profiles.id"])
       .first();
 
     console.log(user);
     return;
   }
 
-  if (param === "attach") {
-    console.log(">> Attach object 1 and 2 to User");
+  if (param === "all-rel") {
     console.log(">> Return User with all relationships");
+    const user = await db("users")
+      .leftJoin("profiles", "users.id", "=", "profiles.user_id")
+      .leftJoin("user_objects", "users.id", "=", "user_objects.user_id")
+      .leftJoin("objects", "user_objects.object_id", "=", "objects.id")
+      .where("users.id", 1)
+      .select([
+        "users.*",
+        db.raw("(json_agg(profiles.*) ->> 0)::json as profile"),
+        db.raw(
+          "case when count(objects) = 0 then '[]' else json_agg(objects.*) end as objects"
+        ),
+      ])
+      .groupBy(["users.id", "profiles.id"])
+      .first();
+
+    console.log(user);
     return;
   }
 
